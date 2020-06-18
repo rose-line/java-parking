@@ -3,21 +3,22 @@ package fr.dampierre;
 public class Parking {
 
   private int capacite;
+  private int nbVehiculesPresents = 0;
   private final int nbInscritsMax = 10000;
-  String[] inscriptionsDesImmatriculations = new String[nbInscritsMax];
+  String[] immatriculationsAutorisees = new String[nbInscritsMax];
   private int nbInscrits = 0;
+  String[] immatriculationsPresentes;
 
   public Parking(int capacite) {
-
     this.capacite = capacite;
-
+    immatriculationsPresentes = new String[capacite];
   }
 
-  public String[] getInscriptionsDesImmatriculations() {
-    return inscriptionsDesImmatriculations;
+  String[] getImmatriculationsAutorisees() {
+    return immatriculationsAutorisees;
   }
 
-  public int getNbInscrits() {
+  int getNbInscrits() {
     return nbInscrits;
   }
 
@@ -29,27 +30,56 @@ public class Parking {
    */
   boolean inscrire(String immatriculation) {
     if (nbInscrits < 10000) {
-      inscriptionsDesImmatriculations[nbInscrits] = immatriculation;
+      immatriculationsAutorisees[nbInscrits] = immatriculation;
       nbInscrits++;
       return true;
     }
     return false;
   }
 
-  boolean validerEntree(String immatriculation) {
-    if (estAutorisee(immatriculation)) {
+  boolean enregistrerEntree(String immatriculation) {
+    if (estAutorisee(immatriculation) && !estPlein()) {
+      immatriculationsPresentes[nbVehiculesPresents] = immatriculation;
+      nbVehiculesPresents++;
       return true;
     }
     return false;
   }
 
+  void enregistrerSortie() {
+    nbVehiculesPresents--;
+  }
+
+  private boolean estPlein() {
+    return nbVehiculesPresents >= capacite;
+  }
+
+  boolean estVide() {
+    return nbVehiculesPresents == 0;
+  }
+
   private boolean estAutorisee(String immatriculation) {
-    for (String imm : inscriptionsDesImmatriculations) {
-      if (imm.equals(immatriculation)) {
+    for (String imm : immatriculationsAutorisees) {
+      if (imm != null && imm.equals(immatriculation)) {
         return true;
       }
     }
     return false;
   }
 
+  void afficherImmatriculationsAutorisees() {
+    for (String imm : immatriculationsAutorisees) {
+      if (imm != null) {
+        System.out.println(imm);
+      }
+    }
+  }
+
+  void afficherImmatriculationsPresentes() {
+    for (String imm : immatriculationsPresentes) {
+      if (imm != null) {
+        System.out.println(imm);
+      }
+    }
+  }
 }

@@ -35,7 +35,7 @@ class ParkingTest {
     boolean ok = parking.inscrire(immatriculation);
 
     assertEquals(true, ok);
-    assertEquals(immatriculation, parking.getInscriptionsDesImmatriculations()[0]);
+    assertEquals(immatriculation, parking.getImmatriculationsAutorisees()[0]);
   }
 
   @Test
@@ -50,8 +50,8 @@ class ParkingTest {
     parking.inscrire(immatriculation2);
     parking.inscrire(immatriculation3);
 
-    assertEquals(immatriculation2, parking.getInscriptionsDesImmatriculations()[1]);
-    assertEquals(immatriculation3, parking.getInscriptionsDesImmatriculations()[2]);
+    assertEquals(immatriculation2, parking.getImmatriculationsAutorisees()[1]);
+    assertEquals(immatriculation3, parking.getImmatriculationsAutorisees()[2]);
   }
 
   @Test
@@ -72,13 +72,168 @@ class ParkingTest {
   }
 
   @Test
-  void vehiculeAutorise_validerEntree_devraitRetournerTrue() {
+  void vehiculeNonAutorise_enregistrerEntree_devraitRetournerFaux() {
 
     Parking parking = new Parking(100);
     String immatriculation = "123-AB-456";
 
-    boolean ok = parking.validerEntree(immatriculation);
+    boolean ok = parking.enregistrerEntree(immatriculation);
 
     assertEquals(false, ok);
+  }
+
+  @Test
+  void vehiculeAutorise_enregistrerEntree_devraitRetournerTrue() {
+
+    Parking parking = new Parking(100);
+    String immatriculation = "123-AB-456";
+    parking.inscrire(immatriculation);
+
+    boolean ok = parking.enregistrerEntree(immatriculation);
+
+    assertEquals(true, ok);
+  }
+
+  @Test
+  void vehiculeNonAutoriseEtImmatriculationsAutoriseesNonVide_enregistrerEntree_devraitRetournerFaux() {
+
+    Parking parking = new Parking(100);
+    String immatriculation = "123-AB-456";
+    String immatriculationBateau = "123456789";
+
+    parking.inscrire(immatriculationBateau);
+    parking.inscrire(immatriculationBateau);
+    parking.inscrire(immatriculationBateau);
+    parking.inscrire(immatriculationBateau);
+
+    boolean ok = parking.enregistrerEntree(immatriculation);
+
+    assertEquals(false, ok);
+  }
+
+  @Test
+  void vehiculeAutoriseEtImmatriculationsAutoriseesNonVide_enregistrerEntree_devraitRetournerTrue() {
+
+    // Mise en place
+
+    Parking parking = new Parking(100);
+    String immatriculation = "123-AB-456";
+    String immatriculationBateau = "123456789";
+    parking.inscrire(immatriculationBateau);
+    parking.inscrire(immatriculationBateau);
+    parking.inscrire(immatriculation);
+    parking.inscrire(immatriculationBateau);
+    parking.inscrire(immatriculationBateau);
+
+    // Test
+
+    boolean ok = parking.enregistrerEntree(immatriculation);
+
+    // Vérification
+
+    assertEquals(true, ok);
+  }
+
+  @Test
+  void parkingPleinVehiculeAutorise_enregistrerEntree_DevraitRetournerFaux() {
+
+    // Mise en place
+
+    Parking parking = new Parking(3);
+    String immatriculation = "123-AB-456";
+    parking.inscrire(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+
+    // Test
+
+    boolean peutEntrer = parking.enregistrerEntree(immatriculation);
+
+    // Validation
+
+    assertEquals(false, peutEntrer);
+  }
+
+  @Test
+  void parkingPleinVehiculeNonAutorise_enregistrerEntree_DevraitRetournerFaux() {
+
+    // Mise en place
+
+    Parking parking = new Parking(3);
+    String immatriculation = "123-AB-456";
+    String immatriculationNonInscrite = "123456789";
+    parking.inscrire(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+
+    // Test
+
+    boolean peutEntrer = parking.enregistrerEntree(immatriculationNonInscrite);
+
+    // Validation
+
+    assertEquals(false, peutEntrer);
+  }
+
+  @Test
+  void parkingNonPleinVehiculeAutorise_enregistrerEntree_DevraitRetournerTrue() {
+
+    // Mise en place
+
+    Parking parking = new Parking(3);
+    String immatriculation = "123-AB-456";
+    parking.inscrire(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+
+    // Test
+
+    boolean peutEntrer = parking.enregistrerEntree(immatriculation);
+
+    // Validation
+
+    assertEquals(true, peutEntrer);
+  }
+
+  @Test
+  void parkingNonPleinVehiculeNonAutorise_enregistrerEntree_DevraitRetournerFaux() {
+
+    // Mise en place
+
+    Parking parking = new Parking(3);
+    String immatriculation = "123-AB-456";
+    String immatriculationNonInscrite = "123456789";
+    parking.inscrire(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+
+    // Test
+
+    boolean peutEntrer = parking.enregistrerEntree(immatriculationNonInscrite);
+
+    // Validation
+
+    assertEquals(false, peutEntrer);
+  }
+
+  @Test
+  void avecUnVehiculeDansParking_enregistrerSortie_devraitLaisserParkingVide() {
+
+    // Mise en place
+
+    Parking parking = new Parking(100);
+    String immatriculation = "123-AB-456";
+    parking.inscrire(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+
+    // Test
+
+    parking.enregistrerSortie();
+
+    // Validation
+
+    assertEquals(true, parking.estVide());
   }
 }
