@@ -38,16 +38,43 @@ public class Parking {
   }
 
   boolean enregistrerEntree(String immatriculation) {
-    if (estAutorisee(immatriculation) && !estPlein()) {
-      immatriculationsPresentes[nbVehiculesPresents] = immatriculation;
+    if (estAutorisee(immatriculation) && !estPlein() && !estPresente(immatriculation)) {
+      immatriculationsPresentes[premierIndexVide()] = immatriculation;
       nbVehiculesPresents++;
       return true;
     }
     return false;
   }
 
-  void enregistrerSortie() {
-    nbVehiculesPresents--;
+  private boolean estPresente(String immatriculation) {
+    for (String imm : immatriculationsPresentes) {
+      if (imm != null) {
+        if (imm.equals(immatriculation)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  boolean enregistrerSortie(String immatriculation) {
+    for (int i = 0; i < immatriculationsPresentes.length; i++) {
+      if (immatriculationsPresentes[i].equals(immatriculation)) {
+        immatriculationsPresentes[i] = null;
+        nbVehiculesPresents--;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private int premierIndexVide() {
+    for (int i = 0; i < immatriculationsPresentes.length; i++) {
+      if (immatriculationsPresentes[i] == null) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private boolean estPlein() {

@@ -183,14 +183,18 @@ class ParkingTest {
     // Mise en place
 
     Parking parking = new Parking(3);
-    String immatriculation = "123-AB-456";
-    parking.inscrire(immatriculation);
-    parking.enregistrerEntree(immatriculation);
-    parking.enregistrerEntree(immatriculation);
+    String immatriculation1 = "123";
+    String immatriculation2 = "456";
+    String immatriculation3 = "789";
+    parking.inscrire(immatriculation1);
+    parking.inscrire(immatriculation2);
+    parking.inscrire(immatriculation3);
+    parking.enregistrerEntree(immatriculation1);
+    parking.enregistrerEntree(immatriculation2);
 
     // Test
 
-    boolean peutEntrer = parking.enregistrerEntree(immatriculation);
+    boolean peutEntrer = parking.enregistrerEntree(immatriculation3);
 
     // Validation
 
@@ -230,10 +234,28 @@ class ParkingTest {
 
     // Test
 
-    parking.enregistrerSortie();
+    parking.enregistrerSortie(immatriculation);
 
     // Validation
 
     assertEquals(true, parking.estVide());
+  }
+
+  @Test
+  void deuxImmatriculationsIdentiques_enregistrerEntree_devraitRetournerFalse() {
+
+    // Mise en place
+    Parking parking = new Parking(100);
+    String immatriculation = "123";
+    parking.inscrire(immatriculation);
+    parking.enregistrerEntree(immatriculation);
+
+    // Test
+
+    boolean rentre = parking.enregistrerEntree(immatriculation);
+
+    // Vérification
+
+    assertEquals(false, rentre);
   }
 }
