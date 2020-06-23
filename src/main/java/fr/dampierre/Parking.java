@@ -22,6 +22,10 @@ public class Parking {
     return nbInscrits;
   }
 
+  int getNbVehiculesPresents() {
+    return nbVehiculesPresents;
+  }
+
   /**
    * Permet d'inscrire une nouvelle immatriculation
    *
@@ -46,7 +50,7 @@ public class Parking {
     return false;
   }
 
-  private boolean estPresente(String immatriculation) {
+  boolean estPresente(String immatriculation) {
     for (String imm : immatriculationsPresentes) {
       if (imm != null) {
         if (imm.equals(immatriculation)) {
@@ -108,5 +112,9 @@ public class Parking {
         System.out.println(imm);
       }
     }
+  }
+
+  public double tauxDOccupation() {
+    return (double) nbVehiculesPresents / capacite * 100.0;
   }
 }

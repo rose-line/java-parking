@@ -258,4 +258,106 @@ class ParkingTest {
 
     assertEquals(false, rentre);
   }
+
+  @Test
+  void parkingVide_tauxDOccupation_devraitRetourner0() {
+    Parking parking = new Parking(100);
+
+    double taux = parking.tauxDOccupation();
+
+    assertEquals(0.0, taux);
+  }
+
+  @Test
+  void parkingPlein_tauxDOccupation_devraitRetourner100() {
+    Parking parking = new Parking(2);
+
+    String imm1 = "1";
+    String imm2 = "2";
+    parking.inscrire(imm1);
+    parking.inscrire(imm2);
+    parking.enregistrerEntree(imm1);
+    parking.enregistrerEntree(imm2);
+
+    double taux = parking.tauxDOccupation();
+
+    assertEquals(100.0, taux);
+  }
+
+  @Test
+  void parkingAMoitiePlein_tauxDOccupation_devraitRetourner50() {
+    Parking parking = new Parking(2);
+
+    String imm1 = "1";
+    parking.inscrire(imm1);
+    parking.enregistrerEntree(imm1);
+
+    double taux = parking.tauxDOccupation();
+
+    assertEquals(50.0, taux);
+  }
+
+  @Test
+  void avecUnVehicule_estPresente_devraitRenvoyerVraiPourCeVehicule() {
+    Parking parking = new Parking(2);
+
+    String imm1 = "1";
+    parking.inscrire(imm1);
+    parking.enregistrerEntree(imm1);
+
+    boolean present = parking.estPresente(imm1);
+
+    assertEquals(true, present);
+  }
+
+  @Test
+  void avecParkingVide_estPresente_devraitRenvoyerFaux() {
+    Parking parking = new Parking(2);
+    String imm = "1";
+    parking.inscrire(imm);
+
+    boolean present = parking.estPresente(imm);
+
+    assertEquals(false, present);
+  }
+
+  @Test
+  void avecUnVehicule_estPresente_devraitRenvoyerFauxPourUnAutreVehicule() {
+    Parking parking = new Parking(2);
+
+    String imm1 = "1";
+    parking.inscrire(imm1);
+    parking.enregistrerEntree(imm1);
+
+    String imm2 = "2";
+    parking.inscrire(imm2);
+
+    boolean present = parking.estPresente(imm2);
+
+    assertEquals(false, present);
+  }
+
+  @Test
+  void test() {
+
+    // Mise en place
+
+    Parkings parkings = new Parkings(2);
+
+    Parking parking1 = new Parking(100);
+    Parking parking2 = new Parking(200);
+
+
+
+    String imm = "1";
+    parking1.inscrire(imm);
+
+    // Test
+
+    boolean rentre = parking2.enregistrerEntree(imm);
+
+    // Vérification
+
+    assertEquals(true, rentre);
+  }
 }
