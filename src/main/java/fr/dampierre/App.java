@@ -2,38 +2,23 @@ package fr.dampierre;
 
 public class App {
   public static void main(String[] args) {
-    Parking parking = new Parking(3);
+    Parc parc = new Parc();
 
-    parking.inscrire("123-456");
-    parking.inscrire("789-012");
-    parking.inscrire("345-678");
-    parking.inscrire("012");
+    Parking parking1 = parc.creerParking(100);
+    Parking parking2 = parc.creerParking(200);
+
+    parc.inscrire("123-456");
+    parc.inscrire("789-012");
+    parc.inscrire("345-678");
+    parc.inscrire("012");
 
     System.out.println("Liste des immatriculations autorisées : ");
-    parking.afficherImmatriculationsAutorisees();
+    parc.afficherImmatriculationsAutorisees();
 
-    parking.enregistrerEntree("123-456");
-    parking.enregistrerEntree("789-012");
+    parc.enregistrerEntree("123-456", parking1);
+    parc.enregistrerEntree("789-012", parking2);
 
-    System.out.println("Liste des immatriculations présentes : ");
-    parking.afficherImmatriculationsPresentes();
-
-    System.out.println("123-456 sort.");
-    parking.enregistrerSortie("123-456");
-    parking.afficherImmatriculationsPresentes();
-
-    System.out.println("123-456 entre.");
-    parking.enregistrerEntree("123-456");
-    parking.afficherImmatriculationsPresentes();
-
-    System.out.println("345-678 entre.");
-    parking.enregistrerEntree("345-678");
-    parking.afficherImmatriculationsPresentes();
-
-    System.out.println("012 tente de rentrer");
-    parking.enregistrerEntree("012");
-    parking.afficherImmatriculationsPresentes();
-
-
+    System.out.println("Liste des immatriculations présentes sur tous les parkings : ");
+    parc.afficherImmatriculationsPresentes();
   }
 }
